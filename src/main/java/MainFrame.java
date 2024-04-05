@@ -1,16 +1,22 @@
+
 import javax.swing.*;
 import java.awt.event.*;
 import java.io.File;
+import java.io.IOException;
 
 public class MainFrame {
-    private static File selectedFile; // Переменная для хранения выбранного файла
+    private static File selectedFile;
 
     public static void showFrame() {
         JFrame frame = new JFrame("File Chooser Example");
         JButton chooseButton = new JButton("Выбрать файл");
         JButton reportButton = new JButton("Получить отчет");
-        JTextField textField = new JTextField(20);
+        JComboBox<Integer> numberComboBox = new JComboBox<>();
         JLabel label = new JLabel("Номер варианта:");
+
+        for (int i = 1; i <= 20; i++) {
+            numberComboBox.addItem(i);
+        }
 
         chooseButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -24,24 +30,21 @@ public class MainFrame {
 
         reportButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                String textFieldValue = textField.getText();
-                if (selectedFile == null) {
-                    JOptionPane.showMessageDialog(frame, "Файл не выбран.");
-
-                } else if (textFieldValue.isEmpty()) {
-                    JOptionPane.showMessageDialog(frame, "Не указан номер варианта.");
+                Integer selectedNumber = (Integer) numberComboBox.getSelectedItem();
+                try {
+                    if (selectedFile == null) {
+                        throw new IllegalArgumentException("Файл не выбран.");
+                    }
+                    ExcelReader.readFromExcel(selectedFile.getAbsolutePath(), selectedNumber );
+                } catch (IOException | IllegalArgumentException ex) {
+                    JOptionPane.showMessageDialog(frame, ex.getMessage(), "Ошибка", JOptionPane.ERROR_MESSAGE);
                 }
-                else{System.out.println("Текст из текстового поля: " + textFieldValue);
-                    System.out.println("Выбранный файл: " + selectedFile.getAbsolutePath());
-                }
-
-
             }
         });
 
         JPanel panel = new JPanel();
         panel.add(label);
-        panel.add(textField);
+        panel.add(numberComboBox);
         panel.add(chooseButton);
         panel.add(reportButton);
 
