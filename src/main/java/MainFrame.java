@@ -1,5 +1,5 @@
 
-import calculatestatistics.GeometricMean;
+import  calculatestatistics.*;
 import read.ExcelReader;
 
 import javax.swing.*;
@@ -12,7 +12,7 @@ public class MainFrame {
     private static File selectedFile;
 
     public static void showFrame() {
-        JFrame frame = new JFrame("File Chooser Example");
+        JFrame frame = new JFrame();
         JButton chooseButton = new JButton("Выбрать файл");
         JButton readButton = new JButton("Cчитать выбранный вариант");
         JButton calculateButton = new JButton("Произвести статистические расчёты");
@@ -29,15 +29,6 @@ public class MainFrame {
                 int returnValue = fileChooser.showOpenDialog(null);
                 if (returnValue == JFileChooser.APPROVE_OPTION) {
                     selectedFile = fileChooser.getSelectedFile();
-                    Integer selectedNumber = (Integer) numberComboBox.getSelectedItem();
-                    try {
-                        if (selectedFile == null) {
-                            throw new IllegalArgumentException("Файл не выбран.");
-                        }
-                        ExcelReader.readFromExcel(selectedFile.getAbsolutePath(), selectedNumber );
-                    } catch (IOException | IllegalArgumentException ex) {
-                        JOptionPane.showMessageDialog(frame, ex.getMessage(), "Ошибка", JOptionPane.ERROR_MESSAGE);
-                    }
                 }
             }
         });
@@ -60,6 +51,33 @@ public class MainFrame {
                 GeometricMean.calculateGeometricMean();
                 List<Double> anotherGeometricMeans = GeometricMean.getGeomtericMean();
                 System.out.println(anotherGeometricMeans);
+                Mean.calculateMean();
+                List<Double> anotherMeans = Mean.getMean();
+                System.out.println(anotherMeans);
+                StandardDeviation.calculateStandardDeviation();
+                List<Double> anotherSD = StandardDeviation.getStandardDeviation();
+                System.out.println(anotherSD);
+                Range.calculateRange();
+                List<Double> range = Range.getRange();
+                System.out.println(range);
+                QuantityElem.calculateRange();
+                List<Integer> quantity =  QuantityElem.getQuantity();
+                System.out.println(quantity);
+                CoefficientVariation.calculateRange();
+                List<Double> cv = CoefficientVariation.getCV();
+                System.out.println(cv);
+                Variance.calculateVariance();
+                List<Double> variance = Variance.getVariance();
+                System.out.println(variance);
+                Minimum.calculateMinimum();
+                List<Double> minn = Minimum.getMin();
+                System.out.println(minn);
+                Maximum.calculateMaximum();
+                List<Double> maxx = Maximum.getMax();
+                System.out.println(maxx);
+                ConfidenceInterval.calculateInterval();
+                List<String> interval = ConfidenceInterval.getInterval();
+                System.out.println(interval);
             }
         });
 
