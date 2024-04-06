@@ -1,6 +1,7 @@
 
 import  calculatestatistics.*;
 import read.ExcelReader;
+import write.*;
 
 import javax.swing.*;
 import java.awt.event.*;
@@ -17,6 +18,7 @@ public class MainFrame {
         JButton readButton = new JButton("Cчитать выбранный вариант");
         JButton calculateButton = new JButton("Произвести статистические расчёты");
         JComboBox<Integer> numberComboBox = new JComboBox<>();
+        JButton exportButton = new JButton("Экспортировать результаты");
         JLabel label = new JLabel("Номер варианта:");
 
         for (int i = 1; i <= 20; i++) {
@@ -49,36 +51,24 @@ public class MainFrame {
         calculateButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 GeometricMean.calculateGeometricMean();
-                List<Double> anotherGeometricMeans = GeometricMean.getGeomtericMean();
-                System.out.println(anotherGeometricMeans);
                 Mean.calculateMean();
-                List<Double> anotherMeans = Mean.getMean();
-                System.out.println(anotherMeans);
                 StandardDeviation.calculateStandardDeviation();
-                List<Double> anotherSD = StandardDeviation.getStandardDeviation();
-                System.out.println(anotherSD);
                 Range.calculateRange();
-                List<Double> range = Range.getRange();
-                System.out.println(range);
                 QuantityElem.calculateRange();
-                List<Integer> quantity =  QuantityElem.getQuantity();
-                System.out.println(quantity);
                 CoefficientVariation.calculateRange();
-                List<Double> cv = CoefficientVariation.getCV();
-                System.out.println(cv);
                 Variance.calculateVariance();
-                List<Double> variance = Variance.getVariance();
-                System.out.println(variance);
                 Minimum.calculateMinimum();
-                List<Double> minn = Minimum.getMin();
-                System.out.println(minn);
                 Maximum.calculateMaximum();
-                List<Double> maxx = Maximum.getMax();
-                System.out.println(maxx);
                 ConfidenceInterval.calculateInterval();
-                List<String> interval = ConfidenceInterval.getInterval();
-                System.out.println(interval);
+                JOptionPane.showMessageDialog(frame, "Расчёты готовы", "Статус", JOptionPane.INFORMATION_MESSAGE);
             }
+        });
+
+        exportButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                ExcelWriter.writeExcelData("OutputStatistics");
+            }
+
         });
 
         JPanel panel = new JPanel();
@@ -87,6 +77,7 @@ public class MainFrame {
         panel.add(chooseButton);
         panel.add(readButton);
         panel.add(calculateButton);
+        panel.add(exportButton);
 
         frame.add(panel);
         frame.setSize(400, 200);
