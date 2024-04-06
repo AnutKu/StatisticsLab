@@ -1,8 +1,12 @@
 
+import calculatestatistics.GeometricMean;
+import read.ExcelReader;
+
 import javax.swing.*;
 import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 public class MainFrame {
     private static File selectedFile;
@@ -10,7 +14,8 @@ public class MainFrame {
     public static void showFrame() {
         JFrame frame = new JFrame("File Chooser Example");
         JButton chooseButton = new JButton("Выбрать файл");
-        JButton reportButton = new JButton("Получить отчет");
+        JButton readButton = new JButton("Cчитать выбранный вариант");
+        JButton calculateButton = new JButton("Произвести статистические расчёты");
         JComboBox<Integer> numberComboBox = new JComboBox<>();
         JLabel label = new JLabel("Номер варианта:");
 
@@ -24,11 +29,19 @@ public class MainFrame {
                 int returnValue = fileChooser.showOpenDialog(null);
                 if (returnValue == JFileChooser.APPROVE_OPTION) {
                     selectedFile = fileChooser.getSelectedFile();
+                    Integer selectedNumber = (Integer) numberComboBox.getSelectedItem();
+                    try {
+                        if (selectedFile == null) {
+                            throw new IllegalArgumentException("Файл не выбран.");
+                        }
+                        ExcelReader.readFromExcel(selectedFile.getAbsolutePath(), selectedNumber );
+                    } catch (IOException | IllegalArgumentException ex) {
+                        JOptionPane.showMessageDialog(frame, ex.getMessage(), "Ошибка", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
             }
         });
-
-        reportButton.addActionListener(new ActionListener() {
+        readButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 Integer selectedNumber = (Integer) numberComboBox.getSelectedItem();
                 try {
@@ -42,11 +55,20 @@ public class MainFrame {
             }
         });
 
+        calculateButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                GeometricMean.calculateGeometricMean();
+                List<Double> anotherGeometricMeans = GeometricMean.getGeomtericMean();
+                System.out.println(anotherGeometricMeans);
+            }
+        });
+
         JPanel panel = new JPanel();
         panel.add(label);
         panel.add(numberComboBox);
         panel.add(chooseButton);
-        panel.add(reportButton);
+        panel.add(readButton);
+        panel.add(calculateButton);
 
         frame.add(panel);
         frame.setSize(400, 200);

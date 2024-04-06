@@ -1,3 +1,5 @@
+package read;
+
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
@@ -5,6 +7,7 @@ import org.apache.poi.ss.usermodel.Row;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ExcelReader {
@@ -38,14 +41,7 @@ public class ExcelReader {
         myExcelBook.close();
     }
 
-    public static List<Double> getColumnX() {
-        return listX;
-    }
-
-    public static List<Double> getColumnY() {
-        return listY;
-    }
-    public static List<Double> getColumnZ() {
-        return listZ;
+    public static List<List<Double>> getColumns() {
+        return Arrays.asList(listX, listY, listZ);
     }
 }
