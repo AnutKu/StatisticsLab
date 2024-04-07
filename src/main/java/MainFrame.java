@@ -19,6 +19,7 @@ public class MainFrame {
         JButton calculateButton = new JButton("Произвести статистические расчёты");
         JComboBox<Integer> numberComboBox = new JComboBox<>();
         JButton exportButton = new JButton("Экспортировать результаты");
+        JButton exitButton = new JButton("Выйти");
         JLabel label = new JLabel("Номер варианта:");
 
         for (int i = 1; i <= 20; i++) {
@@ -45,6 +46,7 @@ public class MainFrame {
                 } catch (IOException | IllegalArgumentException ex) {
                     JOptionPane.showMessageDialog(frame, ex.getMessage(), "Ошибка", JOptionPane.ERROR_MESSAGE);
                 }
+                JOptionPane.showMessageDialog(frame, "Вариант считан", "Статус", JOptionPane.INFORMATION_MESSAGE);
             }
         });
 
@@ -67,8 +69,18 @@ public class MainFrame {
         exportButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 ExcelWriter.writeExcelData("OutputStatistics");
+                JOptionPane.showMessageDialog(frame, "Файл OutputStatistics.xlsx экспортирован", "Статус", JOptionPane.INFORMATION_MESSAGE);
             }
 
+        });
+
+        exitButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                int option = JOptionPane.showConfirmDialog(frame, "Вы уверены, что хотите выйти?", "Подтверждение выхода", JOptionPane.YES_NO_OPTION);
+                if (option == JOptionPane.YES_OPTION) {
+                    System.exit(0);
+                }
+            }
         });
 
         JPanel panel = new JPanel();
@@ -78,6 +90,7 @@ public class MainFrame {
         panel.add(readButton);
         panel.add(calculateButton);
         panel.add(exportButton);
+        panel.add(exitButton);
 
         frame.add(panel);
         frame.setSize(400, 200);
