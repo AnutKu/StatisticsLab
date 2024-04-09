@@ -56,8 +56,8 @@ public class MainFrame {
                 Mean.calculateMean();
                 StandardDeviation.calculateStandardDeviation();
                 Range.calculateRange();
-                QuantityElem.calculateRange();
-                CoefficientVariation.calculateRange();
+                QuantityElem.calculateQuantity();
+                CoefficientVariation.calculateCV();
                 Variance.calculateVariance();
                 Minimum.calculateMinimum();
                 Maximum.calculateMaximum();
