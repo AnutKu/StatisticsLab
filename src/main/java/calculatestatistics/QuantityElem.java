@@ -8,7 +8,7 @@ import java.util.List;
 
 public class QuantityElem {
     private static List<Integer> result = new ArrayList<>();
-    public static void calculateRange() {
+    public static void calculateQuantity() {
         result = new ArrayList<>();
         List<List<Double>> columns = ExcelReader.getColumns();
         for (List<Double> column : columns) {

@@ -7,7 +7,7 @@ import java.util.List;
 
 public class CoefficientVariation {
     private static List<Double> result = new ArrayList<>();
-    public static void calculateRange() {
+    public static void calculateCV() {
         result = new ArrayList<>();
         List<List<Double>> columns = ExcelReader.getColumns();
         Integer ind = 0;
