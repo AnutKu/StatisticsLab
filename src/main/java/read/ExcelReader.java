@@ -11,20 +11,16 @@ import java.util.Arrays;
 import java.util.List;
 
 public class ExcelReader {
-    private static List<Double> listX = new ArrayList<>();
-    private static List<Double> listY = new ArrayList<>();
-    private static List<Double> listZ = new ArrayList<>();
-
-    public static void readFromExcel(String file, int sheetNum) throws IOException {
+    public List<List<Double>> readFromExcel(String file, int sheetNum) throws IOException {
         XSSFWorkbook myExcelBook = new XSSFWorkbook(new FileInputStream(file));
         XSSFSheet myExcelSheet = myExcelBook.getSheet("Вариант " + sheetNum);
         if (myExcelSheet == null) {
             throw new IllegalArgumentException("Лист с вариантом " + sheetNum + " не найден в книге Excel.");
         }
 
-        listX.clear();
-        listY.clear();
-        listZ.clear();
+        List<Double> listX = new ArrayList<>();
+        List<Double> listY = new ArrayList<>();
+        List<Double> listZ = new ArrayList<>();
 
         for (int rowIndex = 1; rowIndex <= myExcelSheet.getLastRowNum(); rowIndex++) {
             Row row = myExcelSheet.getRow(rowIndex);
@@ -38,10 +34,6 @@ public class ExcelReader {
                 listZ.add(z);
             }
         }
-        myExcelBook.close();
-    }
-
-    public static List<List<Double>> getColumns() {
         return Arrays.asList(listX, listY, listZ);
     }
 }

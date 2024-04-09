@@ -1,5 +1,6 @@
 
 import  calculatestatistics.*;
+import calculator.Calculator;
 import read.ExcelReader;
 import write.*;
 
@@ -12,7 +13,7 @@ import java.util.List;
 public class MainFrame {
     private static File selectedFile;
 
-    public static void showFrame() {
+    public static void showFrame() throws IOException {
         JFrame frame = new JFrame();
         JButton chooseButton = new JButton("Выбрать файл");
         JButton readButton = new JButton("Cчитать выбранный вариант");
@@ -21,6 +22,7 @@ public class MainFrame {
         JButton exportButton = new JButton("Экспортировать результаты");
         JButton exitButton = new JButton("Выйти");
         JLabel label = new JLabel("Номер варианта:");
+        Calculator calculator = new Calculator();
 
         for (int i = 1; i <= 20; i++) {
             numberComboBox.addItem(i);
@@ -42,33 +44,26 @@ public class MainFrame {
                     if (selectedFile == null) {
                         throw new IllegalArgumentException("Файл не выбран.");
                     }
-                    ExcelReader.readFromExcel(selectedFile.getAbsolutePath(), selectedNumber );
+                    calculator.read(selectedFile.getAbsolutePath(), selectedNumber);
+                    JOptionPane.showMessageDialog(frame, "Вариант считан", "Статус", JOptionPane.INFORMATION_MESSAGE);
                 } catch (IOException | IllegalArgumentException ex) {
                     JOptionPane.showMessageDialog(frame, ex.getMessage(), "Ошибка", JOptionPane.ERROR_MESSAGE);
                 }
-                JOptionPane.showMessageDialog(frame, "Вариант считан", "Статус", JOptionPane.INFORMATION_MESSAGE);
+
             }
         });
 
         calculateButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                GeometricMean.calculateGeometricMean();
-                Mean.calculateMean();
-                StandardDeviation.calculateStandardDeviation();
-                Range.calculateRange();
-                QuantityElem.calculateQuantity();
-                CoefficientVariation.calculateCV();
-                Variance.calculateVariance();
-                Minimum.calculateMinimum();
-                Maximum.calculateMaximum();
-                ConfidenceInterval.calculateInterval();
+                calculator.calculateAll();
+                calculator.getAllResults();
                 JOptionPane.showMessageDialog(frame, "Расчёты готовы", "Статус", JOptionPane.INFORMATION_MESSAGE);
             }
         });
 
         exportButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                ExcelWriter.writeExcelData("OutputStatistics");
+                calculator.write();
                 JOptionPane.showMessageDialog(frame, "Файл OutputStatistics.xlsx экспортирован", "Статус", JOptionPane.INFORMATION_MESSAGE);
             }
 

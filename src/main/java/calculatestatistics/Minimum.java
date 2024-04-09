@@ -6,20 +6,20 @@ import read.ExcelReader;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Minimum {
-    private static List<Double> result = new ArrayList<>();
-    public static void calculateMinimum() {
-        result = new ArrayList<>();
-        List<List<Double>> columns = ExcelReader.getColumns();
+public class Minimum implements statystics {
+    private List<Double> result = new ArrayList<>();
+
+    @Override
+    public void calculate(List<List<Double>> columns) {
+        result.clear(); // Очищаем предыдущие результаты
         for (List<Double> column : columns) {
-            double range = StatUtils.min(column.stream().mapToDouble(Double::doubleValue).toArray());
-            result.add(range);
+            double minimum = StatUtils.min(column.stream().mapToDouble(Double::doubleValue).toArray());
+            result.add(minimum);
         }
     }
 
-    public static List<Double> getMin(){
+    @Override
+    public List<Double> getResult() {
         return result;
     }
 }
-
-

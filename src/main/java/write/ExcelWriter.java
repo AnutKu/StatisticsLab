@@ -5,41 +5,24 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import calculatestatistics.*;
 
 public class ExcelWriter {
-    public static void writeExcelData(String filename) {
-        // Ваши списки значений
-        List<Double> geometricMeans = GeometricMean.getGeomtericMean();
-        List<Double> means = Mean.getMean();
-        List<Double> SD = StandardDeviation.getStandardDeviation();
-        List<Double> range = Range.getRange();
-        List<Integer> quantity = QuantityElem.getQuantity();
-        List<Double> cv = CoefficientVariation.getCV();
-        List<Double> variance = Variance.getVariance();
-        List<Double> minn = Minimum.getMin();
-        List<Double> maxx = Maximum.getMax();
-        List<String> intervals = ConfidenceInterval.getInterval();
-
-        // Создаем новый документ Excel
+    public static void write(Map<String, List<?>> allResults, String filename) {
         try (Workbook workbook = new XSSFWorkbook()) {
             Sheet sheet = workbook.createSheet("Data");
 
-            // Записываем значения в документ
-            writeListToSheet(sheet, "Среднее геометрическое", 0, geometricMeans);
-            writeListToSheet(sheet, "Среднее арифметическое", 1, means);
-            writeListToSheet(sheet, "Стандартное отклонение",2, SD);
-            writeListToSheet(sheet, "Размах",3, range);
-            writeListToSheet(sheet, "Количество элементов", 4, quantity);
-            writeListToSheet(sheet, "Коэффициент вариации", 5, cv);
-            writeListToSheet(sheet, "Доверительные интервалы для мат.ожидания",6, intervals);
-            writeListToSheet(sheet, "Дисперсия", 7, variance);
-            writeListToSheet(sheet, "Минимум",8, minn);
-            writeListToSheet(sheet, "Максимум",9, maxx);
-            for (int i = 0; i <= 9; i++) {
-                sheet.autoSizeColumn(i);
+            int rowNum = 0;
+            for (Map.Entry<String, List<?>> entry : allResults.entrySet()) {
+                String header = entry.getKey();
+                List<?> values = entry.getValue();
+                writeListToSheet(sheet, header, rowNum++, values);
             }
 
+            for (int i = 0; i < allResults.size(); i++) {
+                sheet.autoSizeColumn(i);
+            }
 
             // Сохраняем документ
             try (FileOutputStream fileOut = new FileOutputStream(filename + ".xlsx")) {

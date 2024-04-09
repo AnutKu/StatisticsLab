@@ -6,18 +6,20 @@ import read.ExcelReader;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Maximum {
-    private static List<Double> result = new ArrayList<>();
-    public static void calculateMaximum() {
-        result = new ArrayList<>();
-        List<List<Double>> columns = ExcelReader.getColumns();
+public class Maximum implements statystics {
+    private List<Double> result = new ArrayList<>();
+
+    @Override
+    public void calculate(List<List<Double>> columns) {
+        result.clear(); // Очищаем предыдущие результаты
         for (List<Double> column : columns) {
-            double range = StatUtils.max(column.stream().mapToDouble(Double::doubleValue).toArray());
-            result.add(range);
+            double maximum = StatUtils.max(column.stream().mapToDouble(Double::doubleValue).toArray());
+            result.add(maximum);
         }
     }
 
-    public static List<Double> getMax(){
+    @Override
+    public List<Double> getResult() {
         return result;
     }
 }
