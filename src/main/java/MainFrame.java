@@ -45,10 +45,11 @@ public class MainFrame {
                         throw new IllegalArgumentException("Файл не выбран.");
                     }
                     calculator.read(selectedFile.getAbsolutePath(), selectedNumber);
+                    JOptionPane.showMessageDialog(frame, "Вариант считан", "Статус", JOptionPane.INFORMATION_MESSAGE);
                 } catch (IOException | IllegalArgumentException ex) {
                     JOptionPane.showMessageDialog(frame, ex.getMessage(), "Ошибка", JOptionPane.ERROR_MESSAGE);
                 }
-                JOptionPane.showMessageDialog(frame, "Вариант считан", "Статус", JOptionPane.INFORMATION_MESSAGE);
+
             }
         });
 
@@ -62,7 +63,7 @@ public class MainFrame {
 
         exportButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                //ExcelWriter.writeExcelData("OutputStatistics");
+                calculator.write();
                 JOptionPane.showMessageDialog(frame, "Файл OutputStatistics.xlsx экспортирован", "Статус", JOptionPane.INFORMATION_MESSAGE);
             }
 

@@ -2,6 +2,7 @@ package calculator;
 
 import calculatestatistics.*;
 import read.ExcelReader;
+import write.ExcelWriter;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -50,8 +51,11 @@ public class Calculator {
 
 
     public Map<String, List<?>> getAllResults() {
-        System.out.println(allResults);
         return allResults;
+    }
+
+    public void write(){
+        ExcelWriter.write(allResults, "OutputStatistics.xlsx");
     }
 
 }
