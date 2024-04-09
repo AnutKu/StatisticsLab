@@ -6,10 +6,10 @@ import read.ExcelReader;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StandardDeviation {
+public class StandardDeviation implements statystics {
     private static List<Double> result = new ArrayList<>();
-    public static void calculateStandardDeviation() {
-        List<List<Double>> columns = ExcelReader.getColumns();
+    @Override
+    public void calculate(List<List<Double>> columns) {
         result = new ArrayList<>();
         for (List<Double> column : columns) {
             double sd = StatUtils.variance((column.stream().mapToDouble(Double::doubleValue).toArray()));
@@ -17,7 +17,8 @@ public class StandardDeviation {
         }
     }
 
-    public static List<Double> getStandardDeviation(){
+    @Override
+    public List<Double> getResult() {
         return result;
     }
 }

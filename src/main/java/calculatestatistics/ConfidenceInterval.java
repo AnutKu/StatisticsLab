@@ -2,34 +2,47 @@ package calculatestatistics;
 
 import org.apache.commons.math3.distribution.NormalDistribution;
 import org.apache.commons.math3.stat.StatUtils;
-import read.ExcelReader;
 
-import java.net.Inet4Address;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ConfidenceInterval {
-    private static List<String> result = new ArrayList<>();
-    public static void calculateInterval() {
-        result = new ArrayList<>();
-        List<List<Double>> columns = ExcelReader.getColumns();
-        Integer ind = 0;
-        List<Double> mean = Mean.getMean();
-        List<Double> sd = StandardDeviation.getStandardDeviation();
-        List<Integer> size = QuantityElem.getQuantity();
-        double confidenceLevel = 0.95;
+public class ConfidenceInterval implements statystics {
+    private List<String> result = new ArrayList<>();
+
+    @Override
+    public void calculate(List<List<Double>> columns) {
+        result.clear();
+        List<Double> mean = new ArrayList<>();
         for (List<Double> column : columns) {
+            double mn = StatUtils.mean(column.stream().mapToDouble(Double::doubleValue).toArray());
+            mean.add(mn);
+        }
+        List<Double> sd = new ArrayList<>();
+        for (List<Double> column : columns) {
+            double ssdd = StatUtils.variance((column.stream().mapToDouble(Double::doubleValue).toArray()));
+            sd.add(Math.sqrt(ssdd));
+        }
+        List<Integer> size = new ArrayList<>();
+        for (List<Double> column : columns) {
+            Integer quantity = column.size();
+            size.add(quantity);
+        }
+        double confidenceLevel = 0.95;
+        for (int ind = 0; ind < columns.size(); ind++) {
+            List<Double> column = columns.get(ind);
             NormalDistribution normalDistribution = new NormalDistribution();
             double quant = normalDistribution.inverseCumulativeProbability(1 - (1 - confidenceLevel) / 2);
             double marginOfError = quant * (sd.get(ind) / size.get(ind));
             double lowerBound = mean.get(ind) - marginOfError;
             double upperBound = mean.get(ind) + marginOfError;
-            result.add("[" + lowerBound + "; " + upperBound + "]");
+            // Формируем строку интервала и добавляем ее в список
+            String interval = "[" + lowerBound + "; " + upperBound + "]";
+            result.add(interval);
         }
     }
 
-    public static List<String> getInterval(){
+    @Override
+    public List<String> getResult() {
         return result;
     }
 }
-

@@ -1,27 +1,35 @@
 package calculatestatistics;
 
+import org.apache.commons.math3.stat.StatUtils;
 import read.ExcelReader;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CoefficientVariation {
-    private static List<Double> result = new ArrayList<>();
-    public static void calculateCV() {
-        result = new ArrayList<>();
-        List<List<Double>> columns = ExcelReader.getColumns();
-        Integer ind = 0;
-        ArrayList<Double> SD = (ArrayList<Double>) StandardDeviation.getStandardDeviation();
-        ArrayList<Double> mean = (ArrayList<Double>) Mean.getMean();
+public class CoefficientVariation implements statystics {
+    private List<Double> result = new ArrayList<>();
 
+    @Override
+    public void calculate(List<List<Double>> columns) {
+        result.clear(); // Очищаем предыдущие результаты
+        List<Double> sd = new ArrayList<>();
         for (List<Double> column : columns) {
-            Double cv = SD.get(ind) / mean.get(ind);
-            ind = ind + 1;
-            result.add(cv);
-
+            double ssdd = StatUtils.variance((column.stream().mapToDouble(Double::doubleValue).toArray()));
+            sd.add(Math.sqrt(ssdd));
         }
-}
-    public static List<Double> getCV(){
+        List<Double> mean = new ArrayList<>();
+        for (List<Double> column : columns) {
+            double mn = StatUtils.mean(column.stream().mapToDouble(Double::doubleValue).toArray());
+            mean.add(mn);
+        }
+        for (int ind = 0; ind < columns.size(); ind++) {
+            double cv = sd.get(ind) / mean.get(ind);
+            result.add(cv);
+        }
+    }
+
+    @Override
+    public List<Double> getResult() {
         return result;
     }
 }

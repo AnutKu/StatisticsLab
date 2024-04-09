@@ -6,18 +6,20 @@ import read.ExcelReader;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Variance {
-    private static List<Double> result = new ArrayList<>();
-    public static void calculateVariance() {
-        List<List<Double>> columns = ExcelReader.getColumns();
-        result = new ArrayList<>();
+public class Variance implements statystics {
+    private List<Double> result = new ArrayList<>();
+
+    @Override
+    public void calculate( List<List<Double>> columns) {
+        result.clear(); // Очищаем предыдущие результаты
         for (List<Double> column : columns) {
-            double variance = StatUtils.variance((column.stream().mapToDouble(Double::doubleValue).toArray()));
+            double variance = StatUtils.variance(column.stream().mapToDouble(Double::doubleValue).toArray());
             result.add(variance);
         }
     }
 
-    public static List<Double> getVariance(){
+    @Override
+    public List<Double> getResult() {
         return result;
     }
 }

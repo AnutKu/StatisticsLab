@@ -1,21 +1,25 @@
 package calculatestatistics;
 
 import org.apache.commons.math3.stat.StatUtils;
+import read.ExcelReader;
+
 import java.util.ArrayList;
 import java.util.List;
-import read.ExcelReader;
-public class Mean {
-    private static List<Double> result = new ArrayList<>();
-    public static void calculateMean() {
-        result = new ArrayList<>();
-        List<List<Double>> columns = ExcelReader.getColumns();
+
+public class Mean implements statystics {
+    private List<Double> result = new ArrayList<>();
+
+    @Override
+    public void calculate(List<List<Double>> columns) {
+        result.clear(); // Очищаем предыдущие результаты
         for (List<Double> column : columns) {
             double mean = StatUtils.mean(column.stream().mapToDouble(Double::doubleValue).toArray());
             result.add(mean);
         }
     }
 
-    public static List<Double> getMean(){
+    @Override
+    public List<Double> getResult() {
         return result;
     }
 }

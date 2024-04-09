@@ -1,22 +1,24 @@
 package calculatestatistics;
 
-import org.apache.commons.math3.stat.StatUtils;
 import read.ExcelReader;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class QuantityElem {
-    private static List<Integer> result = new ArrayList<>();
-    public static void calculateQuantity() {
-        result = new ArrayList<>();
-        List<List<Double>> columns = ExcelReader.getColumns();
+public class QuantityElem implements statystics {
+    private List<Integer> result = new ArrayList<>();
+
+    @Override
+    public void calculate(List<List<Double>> columns) {
+        result.clear();
         for (List<Double> column : columns) {
             Integer quantity = column.size();
             result.add(quantity);
         }
     }
-    public static List<Integer> getQuantity(){
+
+    @Override
+    public List<Integer> getResult() {
         return result;
     }
 }
