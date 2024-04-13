@@ -9,7 +9,7 @@ import java.util.Map;
 import calculatestatistics.*;
 
 public class ExcelWriter {
-    public static void write(Map<String, List<?>> allResults, String filename) {
+    public static void write(Map<String, List<?>> allResults, String filename) throws IOException {
         try (Workbook workbook = new XSSFWorkbook()) {
             Sheet sheet = workbook.createSheet("Data");
 
@@ -28,8 +28,9 @@ public class ExcelWriter {
             try (FileOutputStream fileOut = new FileOutputStream(filename + ".xlsx")) {
                 workbook.write(fileOut);
             }
+            catch (IOException e){throw new IOException("Ошибка при сохранении", e);}
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new IOException("Ошибка при экспорте", e);
         }
     }
 
