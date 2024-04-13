@@ -11,29 +11,29 @@ import java.util.Arrays;
 import java.util.List;
 
 public class ExcelReader {
-    public List<List<Double>> readFromExcel(String file, int sheetNum) throws IOException {
+    public List<List<Double>> readFromExcel(String file, String name) throws IOException {
         XSSFWorkbook myExcelBook = new XSSFWorkbook(new FileInputStream(file));
-        XSSFSheet myExcelSheet = myExcelBook.getSheet("Вариант " + sheetNum);
+        XSSFSheet myExcelSheet = myExcelBook.getSheet(name);
         if (myExcelSheet == null) {
-            throw new IllegalArgumentException("Лист с вариантом " + sheetNum + " не найден в книге Excel.");
+            throw new IllegalArgumentException("Лист с таким названием не найден в книге Excel.");
         }
+        int lastRowNum = myExcelSheet.getLastRowNum();
+        List<List<Double>> columnValues = new ArrayList<>();
+        if (lastRowNum >= 0) {
+            int totalColumns = myExcelSheet.getRow(0).getLastCellNum();
+            for (int columnIndex = 0; columnIndex < totalColumns; columnIndex++) {
+                List<Double> columnData = new ArrayList<>();
+                for (int rowIndex = 1; rowIndex <= lastRowNum; rowIndex++) {
+                    Row row = myExcelSheet.getRow(rowIndex);
+                    if (row != null && row.getCell(columnIndex) != null) {
+                        double cellValue = row.getCell(columnIndex).getNumericCellValue();
+                        columnData.add(cellValue);
+                    }
+                }
 
-        List<Double> listX = new ArrayList<>();
-        List<Double> listY = new ArrayList<>();
-        List<Double> listZ = new ArrayList<>();
-
-        for (int rowIndex = 1; rowIndex <= myExcelSheet.getLastRowNum(); rowIndex++) {
-            Row row = myExcelSheet.getRow(rowIndex);
-            if (row != null && row.getCell(0) != null && row.getCell(1) != null && row.getCell(2) != null) {
-                double x = row.getCell(0).getNumericCellValue();
-                double y = row.getCell(1).getNumericCellValue();
-                double z = row.getCell(2).getNumericCellValue();
-
-                listX.add(x);
-                listY.add(y);
-                listZ.add(z);
+                columnValues.add(columnData);
             }
         }
-        return Arrays.asList(listX, listY, listZ);
+        return columnValues;
     }
 }

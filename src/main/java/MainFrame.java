@@ -5,8 +5,10 @@ import read.ExcelReader;
 import write.*;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.event.*;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
@@ -15,22 +17,20 @@ public class MainFrame {
 
     public static void showFrame() throws IOException {
         JFrame frame = new JFrame();
+        JLabel label = new JLabel("Имя листа:");
+        JTextField sheetname = new JTextField(20);
         JButton chooseButton = new JButton("Выбрать файл");
-        JButton readButton = new JButton("Cчитать выбранный вариант");
+        JButton readButton = new JButton("Cчитать выбранный лист");
         JButton calculateButton = new JButton("Произвести статистические расчёты");
-        JComboBox<Integer> numberComboBox = new JComboBox<>();
         JButton exportButton = new JButton("Экспортировать результаты");
         JButton exitButton = new JButton("Выйти");
-        JLabel label = new JLabel("Номер варианта:");
         Calculator calculator = new Calculator();
-
-        for (int i = 1; i <= 20; i++) {
-            numberComboBox.addItem(i);
-        }
 
         chooseButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 JFileChooser fileChooser = new JFileChooser();
+                FileNameExtensionFilter filter = new FileNameExtensionFilter("Excel files", "xlsx");
+                fileChooser.setFileFilter(filter);
                 int returnValue = fileChooser.showOpenDialog(null);
                 if (returnValue == JFileChooser.APPROVE_OPTION) {
                     selectedFile = fileChooser.getSelectedFile();
@@ -39,12 +39,12 @@ public class MainFrame {
         });
         readButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Integer selectedNumber = (Integer) numberComboBox.getSelectedItem();
+                String name = (String) sheetname.getText();
                 try {
                     if (selectedFile == null) {
                         throw new IllegalArgumentException("Файл не выбран.");
                     }
-                    calculator.read(selectedFile.getAbsolutePath(), selectedNumber);
+                    calculator.read(selectedFile.getAbsolutePath(), name);
                     JOptionPane.showMessageDialog(frame, "Вариант считан", "Статус", JOptionPane.INFORMATION_MESSAGE);
                 } catch (IOException | IllegalArgumentException ex) {
                     JOptionPane.showMessageDialog(frame, ex.getMessage(), "Ошибка", JOptionPane.ERROR_MESSAGE);
@@ -63,11 +63,18 @@ public class MainFrame {
 
         exportButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                calculator.write();
-                JOptionPane.showMessageDialog(frame, "Файл OutputStatistics.xlsx экспортирован", "Статус", JOptionPane.INFORMATION_MESSAGE);
+                try {
+                    calculator.write();
+                    JOptionPane.showMessageDialog(frame, "Файл OutputStatistics.xlsx экспортирован", "Статус", JOptionPane.INFORMATION_MESSAGE);
+                } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(frame, ex.getMessage(), "Ошибка", JOptionPane.ERROR_MESSAGE);
+                }
+
             }
 
         });
+
+
 
         exitButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -80,7 +87,7 @@ public class MainFrame {
 
         JPanel panel = new JPanel();
         panel.add(label);
-        panel.add(numberComboBox);
+        panel.add(sheetname);
         panel.add(chooseButton);
         panel.add(readButton);
         panel.add(calculateButton);

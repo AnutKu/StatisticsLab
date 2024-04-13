@@ -4,6 +4,7 @@ import calculatestatistics.*;
 import read.ExcelReader;
 import write.ExcelWriter;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,9 +30,9 @@ public class Calculator {
         statObjects.put("Размах", new Range());
     }
 
-    public void read(String file, int sheetNum) throws IOException {
+    public void read(String file, String name) throws IOException {
         ExcelReader excelReader = new ExcelReader();
-        columns = excelReader.readFromExcel(file, sheetNum);
+        columns = excelReader.readFromExcel(file, name);
         }
 
 
@@ -54,8 +55,9 @@ public class Calculator {
         return allResults;
     }
 
-    public void write(){
-        ExcelWriter.write(allResults, "OutputStatistics.xlsx");
-    }
+    public void write() throws IOException{
+            ExcelWriter.write(allResults, "OutputStatistics");
 
-}
+
+
+}}
