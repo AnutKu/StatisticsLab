@@ -12,6 +12,7 @@ public class Range implements statystics {
 
     @Override
     public void calculate(List<List<Double>> columns) {
+        result = new ArrayList<>();
         for (List<Double> column : columns) {
             double range = StatUtils.max(column.stream().mapToDouble(Double::doubleValue).toArray()) - StatUtils.min(column.stream().mapToDouble(Double::doubleValue).toArray());
             result.add(range);

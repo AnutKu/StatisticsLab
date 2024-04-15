@@ -11,6 +11,7 @@ public class GeometricMean implements statystics {
 
     @Override
     public void calculate(List<List<Double>> columns) {
+        result = new ArrayList<>();
         for (List<Double> column : columns) {
             double geometricMean = StatUtils.geometricMean(column.stream().mapToDouble(Double::doubleValue).toArray());
             result.add(geometricMean);

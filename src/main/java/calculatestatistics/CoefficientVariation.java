@@ -11,6 +11,7 @@ public class CoefficientVariation implements statystics {
 
     @Override
     public void calculate(List<List<Double>> columns) {
+        result = new ArrayList<>();
         List<Double> sd = new ArrayList<>();
         for (List<Double> column : columns) {
             double ssdd = StatUtils.variance((column.stream().mapToDouble(Double::doubleValue).toArray()));
