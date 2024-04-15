@@ -15,9 +15,9 @@ public class Calculator {
     private Map<String, statystics> statObjects = new HashMap<>();
     private Map<String, List<?>> allResults = new HashMap<>();
     private List<List<Double>> columns;
+    private  List<String>labels;
 
-    public Calculator() throws IOException {
-        // Инициализация объектов статистических калькуляторов
+    public Calculator() {
         statObjects.put("Стандартное отклонение", new StandardDeviation());
         statObjects.put("Доверительный интервал для мат ожидания", new ConfidenceInterval());
         statObjects.put("Количество элементов", new QuantityElem());
@@ -28,11 +28,15 @@ public class Calculator {
         statObjects.put("Коэффициент вариации", new CoefficientVariation());
         statObjects.put("Дисперсия", new Variance());
         statObjects.put("Размах", new Range());
+        statObjects.put("Ковариация", new Covariation());
     }
 
     public void read(String file, String name) throws IOException {
         ExcelReader excelReader = new ExcelReader();
-        columns = excelReader.readFromExcel(file, name);
+        Map<String, List<Double>> data  = excelReader.readFromExcel(file, name);
+        labels = new ArrayList<>(data.keySet());
+        columns = new ArrayList<>(data.values());
+
         }
 
 
@@ -56,7 +60,7 @@ public class Calculator {
     }
 
     public void write() throws IOException{
-            ExcelWriter.write(allResults, "OutputStatistics");
+            ExcelWriter.write(allResults, labels, "OutputStatistics");
 
 
 

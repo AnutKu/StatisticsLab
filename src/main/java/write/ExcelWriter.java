@@ -9,20 +9,25 @@ import java.util.Map;
 import calculatestatistics.*;
 
 public class ExcelWriter {
-    public static void write(Map<String, List<?>> allResults, String filename) throws IOException {
+    public static void write(Map<String, List<?>> allResults, List<String> labels, String filename) throws IOException {
         try (Workbook workbook = new XSSFWorkbook()) {
-            Sheet sheet = workbook.createSheet("Data");
+            Sheet sheet = workbook.createSheet("Всё,кроме ковариации");
+            int rowNum = 1;
+            writeListToSheet(sheet, "", 0, labels);
 
-            int rowNum = 0;
             for (Map.Entry<String, List<?>> entry : allResults.entrySet()) {
                 String header = entry.getKey();
                 List<?> values = entry.getValue();
-                writeListToSheet(sheet, header, rowNum++, values);
+                if (header != "Ковариация"){
+                writeListToSheet(sheet, header, rowNum++, values);}
             }
 
             for (int i = 0; i < allResults.size(); i++) {
                 sheet.autoSizeColumn(i);
             }
+
+            Sheet covarianceSheet = workbook.createSheet("Ковариация");
+            writeCovarianceMatrix(covarianceSheet, (List<List<Double>>) allResults.get("Ковариация"), labels);
 
             // Сохраняем документ
             try (FileOutputStream fileOut = new FileOutputStream(filename + ".xlsx")) {
@@ -34,7 +39,6 @@ public class ExcelWriter {
         }
     }
 
-    // Метод для записи списка значений в строку документа Excel
     private static void writeListToSheet(Sheet sheet, String header, int rowNum, List<?> values) {
         Row row = sheet.createRow(rowNum);
         CellStyle style = sheet.getWorkbook().createCellStyle();
@@ -59,6 +63,32 @@ public class ExcelWriter {
         centerAlignStyle.setAlignment(HorizontalAlignment.CENTER);
         for (int i = 1; i <= values.size(); i++) {
             row.getCell(i).setCellStyle(centerAlignStyle);
+        }
+    }
+
+    public static void writeCovarianceMatrix(Sheet sheet, List<List<Double>> covarianceMatrix, List<String> labels) {
+        int rowNum = 0;
+        int startColumn = 1;
+        Row labelsRow = sheet.createRow(rowNum++);
+        for (int i = 1; i < labels.size() + 1; i++) {
+            labelsRow.createCell(i).setCellValue(labels.get(i - 1));
+        }
+        for (int i = 0; i < labels.size(); i++) {
+            Row row = sheet.createRow(rowNum++);
+            row.createCell(0).setCellValue(labels.get(i));
+        }
+        rowNum = 1;
+        for (List<Double> row : covarianceMatrix) {
+            Row currentRow = sheet.getRow(rowNum);
+            if (currentRow == null) {
+                currentRow = sheet.createRow(rowNum);
+            }
+            int cellNum = startColumn;
+            for (Double value : row) {
+                Cell cell = currentRow.createCell(cellNum++);
+                cell.setCellValue(value);
+            }
+            rowNum++;
         }
     }
 }

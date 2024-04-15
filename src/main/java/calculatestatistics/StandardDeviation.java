@@ -10,7 +10,6 @@ public class StandardDeviation implements statystics {
     private static List<Double> result = new ArrayList<>();
     @Override
     public void calculate(List<List<Double>> columns) {
-        result = new ArrayList<>();
         for (List<Double> column : columns) {
             double sd = StatUtils.variance((column.stream().mapToDouble(Double::doubleValue).toArray()));
             result.add(Math.sqrt(sd));
