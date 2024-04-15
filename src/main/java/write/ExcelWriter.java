@@ -66,7 +66,7 @@ public class ExcelWriter {
         }
     }
 
-    public static void writeCovarianceMatrix(Sheet sheet, List<List<Double>> covarianceMatrix, List<String> labels) {
+    private static void writeCovarianceMatrix(Sheet sheet, List<List<Double>> covarianceMatrix, List<String> labels) {
         int rowNum = 0;
         int startColumn = 1;
         Row labelsRow = sheet.createRow(rowNum++);

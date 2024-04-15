@@ -11,6 +11,7 @@ public class Mean implements statystics {
 
     @Override
     public void calculate(List<List<Double>> columns) {
+        result = new ArrayList<>();
         for (List<Double> column : columns) {
             double mean = StatUtils.mean(column.stream().mapToDouble(Double::doubleValue).toArray());
             result.add(mean);
