@@ -11,7 +11,6 @@ public class Variance implements statystics {
 
     @Override
     public void calculate( List<List<Double>> columns) {
-        result.clear(); // Очищаем предыдущие результаты
         for (List<Double> column : columns) {
             double variance = StatUtils.variance(column.stream().mapToDouble(Double::doubleValue).toArray());
             result.add(variance);

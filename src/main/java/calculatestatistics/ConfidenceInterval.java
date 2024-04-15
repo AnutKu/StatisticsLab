@@ -11,7 +11,6 @@ public class ConfidenceInterval implements statystics {
 
     @Override
     public void calculate(List<List<Double>> columns) {
-        result.clear();
         List<Double> mean = new ArrayList<>();
         for (List<Double> column : columns) {
             double mn = StatUtils.mean(column.stream().mapToDouble(Double::doubleValue).toArray());

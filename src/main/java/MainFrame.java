@@ -6,6 +6,7 @@ import write.*;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -18,8 +19,10 @@ public class MainFrame {
     public static void showFrame() throws IOException {
         JFrame frame = new JFrame();
         JLabel label = new JLabel("Имя листа:");
-        JTextField sheetname = new JTextField(20);
+        JComboBox sheetNames = new JComboBox<>();
+        sheetNames.setPreferredSize(new Dimension(200, 25));
         JButton chooseButton = new JButton("Выбрать файл");
+        JComboBox chooseSampleComboBox = new JComboBox<>();
         JButton readButton = new JButton("Cчитать выбранный лист");
         JButton calculateButton = new JButton("Произвести статистические расчёты");
         JButton exportButton = new JButton("Экспортировать результаты");
@@ -34,12 +37,19 @@ public class MainFrame {
                 int returnValue = fileChooser.showOpenDialog(null);
                 if (returnValue == JFileChooser.APPROVE_OPTION) {
                     selectedFile = fileChooser.getSelectedFile();
+                    List<String> names = null;
+                    try {
+                        names = ExcelReader.getSheetNames(selectedFile.getAbsolutePath());
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    for (String name : names) sheetNames.addItem(name);
                 }
             }
         });
         readButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                String name = (String) sheetname.getText();
+                String name = (String) sheetNames.getSelectedItem();
                 try {
                     if (selectedFile == null) {
                         throw new IllegalArgumentException("Файл не выбран.");
@@ -87,7 +97,7 @@ public class MainFrame {
 
         JPanel panel = new JPanel();
         panel.add(label);
-        panel.add(sheetname);
+        panel.add(sheetNames);
         panel.add(chooseButton);
         panel.add(readButton);
         panel.add(calculateButton);

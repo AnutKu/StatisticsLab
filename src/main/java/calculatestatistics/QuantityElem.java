@@ -10,7 +10,6 @@ public class QuantityElem implements statystics {
 
     @Override
     public void calculate(List<List<Double>> columns) {
-        result.clear();
         for (List<Double> column : columns) {
             Integer quantity = column.size();
             result.add(quantity);
