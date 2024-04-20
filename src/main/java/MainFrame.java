@@ -11,6 +11,7 @@ import java.awt.event.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.List;
 
 public class MainFrame {
@@ -31,7 +32,12 @@ public class MainFrame {
 
         chooseButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                JFileChooser fileChooser = new JFileChooser();
+                JFileChooser fileChooser = null;
+                try {
+                    fileChooser = new JFileChooser(new File(Main.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath()).getParentFile());
+                } catch (URISyntaxException ex) {
+                    throw new RuntimeException(ex);
+                }
                 FileNameExtensionFilter filter = new FileNameExtensionFilter("Excel files", "xlsx");
                 fileChooser.setFileFilter(filter);
                 int returnValue = fileChooser.showOpenDialog(null);
